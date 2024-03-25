@@ -9,7 +9,7 @@ use bytebuffer::ByteBuffer;
 use fuser::{FileAttr, Filesystem, FileType, KernelConfig, ReplyAttr, ReplyCreate, ReplyData, ReplyDirectory, ReplyEmpty, ReplyEntry, ReplyOpen, ReplyWrite, Request, TimeOrNow};
 use fuser::consts::FOPEN_DIRECT_IO;
 use fuser::TimeOrNow::Now;
-use libc::ENOENT;
+use libc::{ENOENT, ENOSYS};
 use log::{debug, warn};
 
 use crate::tree_fs::{Item, TreeFs};
@@ -479,6 +479,57 @@ impl Filesystem for MemFs {
         attr.gid = creation_gid(&parent_attr, req.gid());
 
         reply.entry(&Duration::new(0, 0), &attr, 0);
+    }
+
+    fn rename(
+        &mut self,
+        _req: &Request,
+        parent: u64,
+        name: &OsStr,
+        new_parent: u64,
+        new_name: &OsStr,
+        _flags: u32,
+        reply: ReplyEmpty,
+    ) {
+        debug!("rename() called with {:?} {:?} {:?} {:?}", parent, name, new_parent, new_name);
+
+        if parent != new_parent {
+            reply.error(ENOSYS);
+            return;
+        }
+
+        let parent = match self.tree_fs.get_item_mut(parent) {
+            Some(parent) => parent,
+            None => {
+                reply.error(ENOENT);
+                return;
+            }
+        };
+
+        if parent.find_child_mut(new_name.to_str().unwrap()).is_some() {
+            reply.error(libc::EEXIST);
+            return;
+        }
+
+        let child = match parent.find_child_mut(name.to_str().unwrap()) {
+            Some(child) => child,
+            None => {
+                reply.error(ENOENT);
+                return;
+            }
+        };
+
+        child.name = new_name.to_str().unwrap().to_string();
+
+        let parent_attr = parent.extra.as_mut().unwrap();
+        parent_attr.ctime = SystemTime::now();
+        parent_attr.mtime = SystemTime::now();
+
+        let attr = child.extra.as_mut().unwrap();
+        attr.ctime = SystemTime::now();
+        attr.mtime = SystemTime::now();
+
+        reply.ok();
     }
 
     fn unlink(&mut self, req: &Request, parent: u64, name: &OsStr, reply: ReplyEmpty) {
