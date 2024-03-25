@@ -6,7 +6,7 @@ Log level is controlled via env variable `RUST_LOG`. \
 If uses [log](https://crates.io/crates/log) crate, possible levels are `trace`, `debug`, `info`, `warn`, `error` as defined [here](https://docs.rs/log/latest/log/#macros).
 
 # Not yet implemented
-- rename (mv)
+- move/rename (mv)
 - links
 - xattr
 
