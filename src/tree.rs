@@ -53,7 +53,7 @@ impl<T> Tree<T> {
 
     pub fn push_child(&self, parent: &Rc<RefCell<TreeNode<T>>>, child: &Rc<RefCell<TreeNode<T>>>) {
         parent.borrow_mut().children.push(child.clone());
-        child.borrow_mut().parent = Rc::downgrade(&parent);
+        child.borrow_mut().parent = Rc::downgrade(parent);
     }
 
     pub fn remove_child(&self, parent: &Rc<RefCell<TreeNode<T>>>, child: &Rc<RefCell<TreeNode<T>>>) {
