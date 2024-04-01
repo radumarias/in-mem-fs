@@ -41,7 +41,7 @@ impl MemFs {
             MemFs {
                 tree_fs: TreeFs::new(),
                 direct_io,
-                suid_support,
+                suid_support: _suid_support,
                 current_inode: 1,
                 current_file_handle: 0,
             }
