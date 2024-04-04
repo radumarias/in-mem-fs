@@ -656,7 +656,7 @@ impl Filesystem for MemFs {
                 let read_len = item.data.as_mut().unwrap().read(&mut buffer).unwrap();
                 debug!("  read_len={}", read_len);
 
-                reply.data(&buffer);
+                reply.data(&buffer[..read_len]);
             }
             None => reply.error(ENOENT),
         }
