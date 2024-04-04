@@ -688,7 +688,10 @@ impl Filesystem for MemFs {
                 item.data.as_mut().unwrap().set_wpos(offset as usize);
                 let _ = item.data.as_mut().unwrap().write(data);
 
+                item.extra.as_mut().unwrap().mtime = SystemTime::now();
+                item.extra.as_mut().unwrap().ctime = SystemTime::now();
                 item.extra.as_mut().unwrap().size = item.data.as_mut().unwrap().len() as u64;
+                clear_suid_sgid(&mut item.extra.as_mut().unwrap());
 
                 reply.written(data.len() as u32);
             }
