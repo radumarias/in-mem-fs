@@ -8,9 +8,9 @@ Log level is controlled via env variable `RUST_LOG`. \
 It uses [log](https://crates.io/crates/log) crate, possible levels are `trace`, `debug`, `info`, `warn`, `error` as defined [here](https://docs.rs/log/latest/log/#macros).
 
 # Not yet implemented
-- move (mv). Supports only renaming in the same directory.
-- links
-- xattr
+- [ ] move (mv). Supports only renaming in the same directory.
+- [ ] links
+- [ ] xattr
 
 ## Usage
 ```
