@@ -17,3 +17,12 @@ It uses [log](https://crates.io/crates/log) crate, possible levels are `trace`, 
 export RUST_LOG='info'
 in_mem_fs --mount-point PATH
 ```
+
+# Contribute
+
+Feel free to fork it, change and use it in any way that you want.
+If you build something interesting and feel like sharing pull requests are always appreciated.
+
+## How to contribute
+
+Please see [CONTRIBUTING.md](CONTRIBUTING.md).
